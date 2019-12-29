@@ -13,12 +13,13 @@
   overflow-y: scroll;
 
   .cart-items {
-    height: 340px;
+    height: 280px;
     display: flex;
     flex-direction: column;
   }
 
   button {
+    margin-bottom: 12px;
     margin-top: auto;
   }
 }
