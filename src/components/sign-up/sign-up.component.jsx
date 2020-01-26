@@ -1,11 +1,13 @@
 import React from "react";
+import { connect } from "react-redux";
 
 import FormInput from "../form-input/form-input.component";
 import CustomButton from "../custom-button/custom.button.component";
 
-import { auth, createUserProfileDocument } from "../../firebase/firebase.utils";
+import { signUpStart } from "../../redux/user/user.actions";
 
 import "./sign-up.styles.scss";
+import { userErrors } from "../../redux/user/user.selectors";
 
 class SignUp extends React.Component {
   constructor() {
@@ -21,7 +23,7 @@ class SignUp extends React.Component {
 
   handleSubmit = async event => {
     event.preventDefault();
-
+    const { signUp, error } = this.props;
     const { displayName, email, password, confirmPassword } = this.state;
 
     if (password !== confirmPassword) {
@@ -29,19 +31,7 @@ class SignUp extends React.Component {
       return;
     }
 
-      try {
-        const { user } = await auth.createUserWithEmailAndPassword(email, password);
-
-        await createUserProfileDocument(user, { displayName });
-        this.setState({
-          displayName: "",
-          email: "",
-          password: "",
-          confirmPassword: ""
-        });
-      } catch (err) {
-        console.log(err);
-      }
+    signUp(email, password, displayName);
   };
 
   handleChange = event => {
@@ -52,6 +42,7 @@ class SignUp extends React.Component {
 
   render() {
     const { displayName, email, password, confirmPassword } = this.state;
+    const { error } = this.props;
     return (
       <div className="sign-up">
         <h2 className="title">I do not have an account</h2>
@@ -91,9 +82,24 @@ class SignUp extends React.Component {
           />
           <CustomButton type="submit">SIGN UP</CustomButton>
         </form>
+
+        { error ? <div style={{color: 'tomato', marginTop: '10px'}}>{error.message}</div> : null}
       </div>
     );
   }
 }
 
-export default SignUp;
+const mapStateToProps = state => {
+  return {
+    error: userErrors(state)
+  };
+};
+
+function mapDispatchToProps(dispatch) {
+  return {
+    signUp: (email, password, displayName) =>
+      dispatch(signUpStart({ email, password, displayName }))
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp);

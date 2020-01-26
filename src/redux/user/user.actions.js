@@ -5,16 +5,34 @@ export const setCurrentUser = user => ({
   payload: user
 });
 
+//SIGN UP
+
+export const signUpStart = userData => ({
+  type: UserActionTypes.SIGN_UP_START,
+  payload: userData
+});
+
+export const signUpSuccess = ({ user, additionalData}) => ({
+  type: UserActionTypes.SIGN_UP_SUCCESS,
+  payload: { user, additionalData}
+});
+
+export const signUpFailure = error => ({
+  type: UserActionTypes.SIGN_UP_FAILURE,
+  payload: error
+});
+
 //SIGN IN
 
 export const googleSignInStart = () => ({
   type: UserActionTypes.GOOGLE_SIGN_IN_START
 });
 
-export const emailSignInStart = emailAndPassword => ({
+export const emailSignInStart = userData => ({
   type: UserActionTypes.EMAIL_SIGN_IN_START,
-  payload: emailAndPassword
+  payload: userData
 });
+
 export const signInSuccess = user => ({
   type: UserActionTypes.SIGN_IN_SUCCESS,
   payload: user
