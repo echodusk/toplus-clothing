@@ -8,7 +8,7 @@ import {
   createUserProfileDocument,
   getCurrentUser
 } from "../../firebase/firebase.utils";
-import { signInSuccess, signInFailure } from "./user.actions";
+import { signInSuccess, signInFailure, signOutSuccess, signOutFailure } from "./user.actions";
 
 export function* getSnapshotFromUserAuth(userAuth) {
   try {
@@ -19,6 +19,8 @@ export function* getSnapshotFromUserAuth(userAuth) {
     yield put(signInFailure(error));
   }
 }
+
+// google/mail sign in 
 export function* signInWithGoogle() {
   try {
     const { user } = yield auth.signInWithPopup(googleProvider);
@@ -47,6 +49,18 @@ export function* signInWithEmail({ payload: { email, password } }) {
   }
 }
 
+// sign out
+
+export function* signOut() {
+  try {
+    yield auth.signOut();
+    yield put(signOutSuccess());
+  } catch (error) {
+    yield put(signOutFailure(error));
+  }
+}
+
+// saga dispatches 
 export function* onGoogleSignInStart() {
   yield takeLatest(UserActionTypes.GOOGLE_SIGN_IN_START, signInWithGoogle);
 }
@@ -58,10 +72,16 @@ export function* onEmailSignInStart() {
 export function* onCheckUserSession() {
   yield takeLatest(UserActionTypes.CHECK_USER_SESSION, isUserAuthenticated);
 }
+
+export function* onSignOutStart() {
+  yield takeLatest(UserActionTypes.SIGN_OUT_START, signOut);
+}
+
 export function* userSagas() {
   yield all([
     call(onGoogleSignInStart),
     call(onEmailSignInStart),
-    call(onCheckUserSession)
+    call(onCheckUserSession),
+    call(onSignOutStart)
   ]);
 }
