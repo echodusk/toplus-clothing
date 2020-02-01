@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 
 import FormInput from "../form-input/form-input.component";
@@ -9,22 +9,18 @@ import { signUpStart } from "../../redux/user/user.actions";
 import "./sign-up.styles.scss";
 import { userErrors } from "../../redux/user/user.selectors";
 
-class SignUp extends React.Component {
-  constructor() {
-    super();
+const SignUp = ({ signUp, error }) => {
+  const [userCredentials, setUserCredentials] = useState({
+    displayName: "",
+    email: "",
+    password: "",
+    confirmPassword: ""
+  });
 
-    this.state = {
-      displayName: "",
-      email: "",
-      password: "",
-      confirmPassword: ""
-    };
-  }
+  const { displayName, email, password, confirmPassword } = userCredentials;
 
-  handleSubmit = async event => {
+  const handleSubmit = async event => {
     event.preventDefault();
-    const { signUp, error } = this.props;
-    const { displayName, email, password, confirmPassword } = this.state;
 
     if (password !== confirmPassword) {
       alert("password don't match");
@@ -34,60 +30,60 @@ class SignUp extends React.Component {
     signUp(email, password, displayName);
   };
 
-  handleChange = event => {
+  const handleChange = event => {
     const { name, value } = event.target;
 
-    this.setState({ [name]: value });
+    setUserCredentials({ ...userCredentials, [name]: value });
   };
 
-  render() {
-    const { displayName, email, password, confirmPassword } = this.state;
-    const { error } = this.props;
-    return (
-      <div className="sign-up">
-        <h2 className="title">I do not have an account</h2>
-        <span>Sign up wit hyour email and password</span>
-        <form className="sign-up-form" onSubmit={this.handleSubmit}>
-          <FormInput
-            required
-            type="text"
-            name="displayName"
-            label="Display Name"
-            value={displayName}
-            handleChange={this.handleChange}
-          />
-          <FormInput
-            required
-            type="text"
-            name="email"
-            label="Email"
-            value={email}
-            handleChange={this.handleChange}
-          />
-          <FormInput
-            required
-            type="password"
-            name="password"
-            label="Password"
-            value={password}
-            handleChange={this.handleChange}
-          />
-          <FormInput
-            required
-            type="password"
-            name="confirmPassword"
-            label="Confirm Password"
-            value={confirmPassword}
-            handleChange={this.handleChange}
-          />
-          <CustomButton type="submit">SIGN UP</CustomButton>
-        </form>
+  return (
+    <div className="sign-up">
+      <h2 className="title">I do not have an account</h2>
+      <span>Sign up wit hyour email and password</span>
+      <form className="sign-up-form" onSubmit={handleSubmit}>
+        <FormInput
+          required
+          type="text"
+          name="displayName"
+          label="Display Name"
+          value={displayName}
+          handleChange={handleChange}
+        />
+        <FormInput
+          required
+          type="text"
+          name="email"
+          label="Email"
+          value={email}
+          handleChange={handleChange}
+        />
+        <FormInput
+          required
+          type="password"
+          name="password"
+          label="Password"
+          value={password}
+          handleChange={handleChange}
+        />
+        <FormInput
+          required
+          type="password"
+          name="confirmPassword"
+          label="Confirm Password"
+          value={confirmPassword}
+          handleChange={handleChange}
+        />
+        <CustomButton type="submit">SIGN UP</CustomButton>
+      </form>
 
-        { error ? <div style={{color: 'tomato', marginTop: '10px'}}>{error.message}</div> : null}
-      </div>
-    );
-  }
-}
+      {error ? (
+        <div style={{ color: "tomato", marginTop: "10px" }}>
+          {error.message}
+        </div>
+      ) : null}
+    </div>
+  );
+};
 
 const mapStateToProps = state => {
   return {
