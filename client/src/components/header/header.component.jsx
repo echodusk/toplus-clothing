@@ -26,7 +26,7 @@ const Header = ({ currentUser, hidden, signOutStart }) => (
       <OptionLink to='/shop'>SHOP</OptionLink>
       <OptionLink to='/shop'>CONTACT</OptionLink>
       {currentUser ? (
-        <OptionLink as='div' onClick={signOutStart}>
+        <OptionLink to='/' as='div' onClick={signOutStart}>
           SIGN OUT
         </OptionLink>
       ) : (
@@ -47,7 +47,4 @@ const mapDispatchToProps = dispatch => ({
   signOutStart: () => dispatch(signOutStart())
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Header);
+export default connect(mapStateToProps, mapDispatchToProps)(Header);
