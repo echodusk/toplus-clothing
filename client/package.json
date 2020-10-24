@@ -8,6 +8,8 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.20.0",
+    "enzyme": "3.10.0",
+    "enzyme-adapter-react-16": "1.14.0",
     "firebase": "^7.6.1",
     "node-sass": "^4.13.0",
     "react": "^16.12.0",
